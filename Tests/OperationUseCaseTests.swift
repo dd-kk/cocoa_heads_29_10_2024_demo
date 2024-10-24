@@ -444,6 +444,28 @@ final class OperationUseCaseTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
 //====================================================================================================
+    func testDelayBetweenPUTRetries() throws {
+        let expectation = XCTestExpectation(description: "Failed PUT-request must be retried, but after delay")
+        expectation.assertForOverFulfill = true
+        let experiment = Experiment(
+            putRequestResults: [
+                .error(error500())
+            ]
+        )
+        let useCase = experiment.setup()
+        let cancellable = expectSuccess(
+            useCase,
+            intervalBetweenRetries: 0.2,
+            delayBeforeFirstGetRequest: 0.2,
+            for: expectation
+        )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08, execute: {
+            expectation.fulfill()
+        })
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+        wait(for: [expectation], timeout: 0.1)
+    }
+//====================================================================================================
     func testNoDelayBetweenPUTSuccessAndDetailsRequest() throws {
         let expectation = XCTestExpectation(description: "Order details are requested right after it is known to be accepted")
         expectation.assertForOverFulfill = true

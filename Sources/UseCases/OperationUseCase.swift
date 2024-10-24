@@ -256,9 +256,19 @@ extension OperationUseCase {
     ) -> AnyPublisher<EtherTakingOperation, Never> {
         return attemptPutRequest(starting: operation)
             .flatMap { operation in
-                return iterate(
-                    operation: operation
-                )
+                if case .putRequestNotAcknowledgedYet = operation.state {
+                    return pause(for: operation.intervalBetweenRetries)
+                        .flatMap { _ in
+                            return iterate(
+                                operation: operation
+                            )
+                        }
+                        .eraseToAnyPublisher()
+                } else {
+                    return iterate(
+                        operation: operation
+                    )
+                }
             }
             .eraseToAnyPublisher()
     }
