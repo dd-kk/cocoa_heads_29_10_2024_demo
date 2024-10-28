@@ -83,10 +83,10 @@ extension OperationUseCase {
 //==================================================================================================== 
 extension OperationUseCase {
     private struct EtherTakingOperation {
-        var state: EtherTakingOperationState
-        var order: EtherOrder
-        var intervalBetweenRetries: TimeInterval
-        var delayBeforeFirstGetRequest: TimeInterval
+        let state: EtherTakingOperationState
+        let order: EtherOrder
+        let intervalBetweenRetries: TimeInterval
+        let delayBeforeFirstGetRequest: TimeInterval
         
         func move(
             to updatedState: EtherTakingOperationState

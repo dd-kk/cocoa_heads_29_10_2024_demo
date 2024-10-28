@@ -21,7 +21,7 @@ public struct EtherOrderTakeResponseDto {
 public struct HTTPError: Error {
     public let userInfo: [AnyHashable: Any]
     
-    public init(userInfo: [AnyHashable : Any]) {
+    public init(userInfo: [AnyHashable: Any]) {
         self.userInfo = userInfo
     }
     // ...
